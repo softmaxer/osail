@@ -57,15 +57,15 @@ func displayExperiments() templ.ComponentScript {
 
 func addExpEventListener() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_addExpEventListener_1ad0`,
-		Function: `function __templ_addExpEventListener_1ad0(){document.addEventListener('DOMContentLoaded', () => {
+		Name: `__templ_addExpEventListener_1c8c`,
+		Function: `function __templ_addExpEventListener_1c8c(){document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('new-exp-form').addEventListener('submit', function(event) {
     event.preventDefault();
     const id = document.getElementById("id").value;
     const prompt = document.getElementById("prompt").value;
     const competitors = document.getElementById("competitors").value;
     const judge = document.getElementById("judge").value;
-    let reqBody = JSON.stringify({"id": id, "prompt": prompt, "judge": judge, "competitors": competitors});
+    let reqBody = JSON.stringify({"id": id, "prompt": prompt, "judge": judge, "competitors": competitors, "status": "idle"});
     let expList = document.getElementById('exp-container');
     fetch("/experiments/add", {method: 'POST', headers: {'Content-type': 'application/json'}, body: reqBody}).then(response => response.json()).then(data => {
         let card1 = document.createElement('div');
@@ -98,8 +98,8 @@ func addExpEventListener() templ.ComponentScript {
   });
   });
 }`,
-		Call:       templ.SafeScript(`__templ_addExpEventListener_1ad0`),
-		CallInline: templ.SafeScriptInline(`__templ_addExpEventListener_1ad0`),
+		Call:       templ.SafeScript(`__templ_addExpEventListener_1c8c`),
+		CallInline: templ.SafeScriptInline(`__templ_addExpEventListener_1c8c`),
 	}
 }
 
@@ -116,7 +116,7 @@ func Experiments() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><title>Localflow</title><style>\n\nheader {\n  display: flex;\n  justify-content: space-between;\n}\n\nnav ul {\n    list-style: none;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\nli {\n    margin-right: 16px;\n}\n\n//a {\n//    color: #333;\n//    text-decoration: none;\n//}\n      </style><link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ\" crossorigin=\"anonymous\"><script src=\"https://unpkg.com/htmx.org@1.9.2\" integrity=\"sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h\" crossorigin=\"anonymous\"></script><script src=\"https://unpkg.com/htmx.org@1.9.11/dist/ext/json-enc.js\"></script><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script></head><body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><title>Localflow</title><style>\n\nheader {\n  display: flex;\n  justify-content: space-between;\n}\n\n\nnav ul {\n    list-style: none;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\nli {\n    margin-right: 16px;\n}\n//a {\n//    color: #333;\n//    text-decoration: none;\n//}\n      </style><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\"><script src=\"https://code.jquery.com/jquery-3.3.1.slim.min.js\" integrity=\"sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo\" crossorigin=\"anonymous\"></script><script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js\" integrity=\"sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1\" crossorigin=\"anonymous\"></script><script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js\" integrity=\"sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM\" crossorigin=\"anonymous\"></script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,7 +128,7 @@ func Experiments() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header><nav class=\"navbar\"><ul><li class=\"nav-item\"><a class=\"nav-link\" href=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header><nav class=\"navbar navbar-expand-lg navbar-light\"><ul><li class=\"nav-item\"><a class=\"nav-link\" href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -155,7 +155,7 @@ func Experiments() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Boards</a></li></ul></nav></header><div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form id=\"new-exp-form\"><div class=\"mb-2\"><label for=\"id\">Name</label> <input type=\"text\" name=\"id\" id=\"id\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"prompt\">Prompt</label> <input type=\"textarea\" name=\"prompt\" id=\"prompt\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"competitors\">Competitors</label> <input type=\"textarea\" name=\"competitors\" id=\"competitors\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\"><span class=\"spinner-border spinner-border-sm htmx-indicator\" id=\"spinner\" role=\"status\" aria-hidden=\"true\"></span> Add</button></form></div></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Boards</a></li></ul></nav></header><div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form id=\"new-exp-form\"><div class=\"mb-2\"><label for=\"id\">Name</label> <input type=\"text\" name=\"id\" id=\"id\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"prompt\">Prompt</label> <input type=\"textarea\" name=\"prompt\" id=\"prompt\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"competitors\">Competitors</label> <input type=\"textarea\" name=\"competitors\" id=\"competitors\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\">Add</button></form></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
