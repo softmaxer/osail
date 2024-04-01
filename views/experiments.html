@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Localflow</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="scripts/models.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/">Experiments</a></li>
+          <li><a href="/">Boards</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="experiment">
+      <div class="models" id="models"></div>
+      <div class="add">
+        <input type="text" id="model-name">
+        <button type="button" onclick="addModel()">Add</button>
+      </div>
+      <div class="prompts">
+        <input type="file" id="file-selector">
+      </div>
+      <button type="button" onclick="startExperiment()">Start</button>
+    </div>
+  </body>
+</html>
