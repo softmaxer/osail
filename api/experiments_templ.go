@@ -12,8 +12,8 @@ import "bytes"
 
 func displayExperiments() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_displayExperiments_b588`,
-		Function: `function __templ_displayExperiments_b588(){document.addEventListener('DOMContentLoaded', () => {
+		Name: `__templ_displayExperiments_6859`,
+		Function: `function __templ_displayExperiments_6859(){document.addEventListener('DOMContentLoaded', () => {
   fetch('/experiments/list')
     .then(response => response.json())
     .then(data => {
@@ -37,7 +37,7 @@ func displayExperiments() templ.ComponentScript {
         let linkText = document.createTextNode('Open');
         cardLink.appendChild(linkText)
         cardLink.title = "Open";
-        cardLink.href = "/open"
+        cardLink.href = "/experiments/" + data[i]["id"] + "/open"
         cardBody.appendChild(cardtitle);
         cardBody.appendChild(cardText);
         card1.appendChild(cardHeader);
@@ -50,8 +50,56 @@ func displayExperiments() templ.ComponentScript {
     .catch(error => console.error('Error:', error));
 });
 }`,
-		Call:       templ.SafeScript(`__templ_displayExperiments_b588`),
-		CallInline: templ.SafeScriptInline(`__templ_displayExperiments_b588`),
+		Call:       templ.SafeScript(`__templ_displayExperiments_6859`),
+		CallInline: templ.SafeScriptInline(`__templ_displayExperiments_6859`),
+	}
+}
+
+func addExpEventListener() templ.ComponentScript {
+	return templ.ComponentScript{
+		Name: `__templ_addExpEventListener_1ad0`,
+		Function: `function __templ_addExpEventListener_1ad0(){document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('new-exp-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const id = document.getElementById("id").value;
+    const prompt = document.getElementById("prompt").value;
+    const competitors = document.getElementById("competitors").value;
+    const judge = document.getElementById("judge").value;
+    let reqBody = JSON.stringify({"id": id, "prompt": prompt, "judge": judge, "competitors": competitors});
+    let expList = document.getElementById('exp-container');
+    fetch("/experiments/add", {method: 'POST', headers: {'Content-type': 'application/json'}, body: reqBody}).then(response => response.json()).then(data => {
+        let card1 = document.createElement('div');
+        card1.className = "card";
+        let cardHeader = document.createElement('div');
+        cardHeader.className = "card-header";
+        cardHeader.innerHTML = data["id"];
+        let cardBody = document.createElement('div');
+        cardBody.className = "card-body";
+        let cardtitle = document.createElement('h5');
+        cardtitle.className = "card-title";
+        cardtitle.innerHTML = data["judge"];
+        let cardText = document.createElement('p');
+        cardText.className = "card-text";
+        cardText.innerHTML = data["prompt"];
+        let cardLink = document.createElement('a');
+        cardLink.className = "card-link ml-5";
+        let linkText = document.createTextNode('Open');
+        cardLink.appendChild(linkText)
+        cardLink.title = "Open";
+        cardLink.href = "/experiments/" + data["id"] + "/open"
+        cardBody.appendChild(cardtitle);
+        cardBody.appendChild(cardText);
+        card1.appendChild(cardHeader);
+        card1.appendChild(cardBody);
+        card1.appendChild(cardLink);
+
+        expList.appendChild(card1);
+      }).catch(error => console.error('Error: ', error));
+  });
+  });
+}`,
+		Call:       templ.SafeScript(`__templ_addExpEventListener_1ad0`),
+		CallInline: templ.SafeScriptInline(`__templ_addExpEventListener_1ad0`),
 	}
 }
 
@@ -73,6 +121,10 @@ func Experiments() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = displayExperiments().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = addExpEventListener().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -103,7 +155,7 @@ func Experiments() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Boards</a></li></ul></nav></header><div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form hx-post=\"/experiments/add\" hx-ext=\"json-enc\" hx-indicator=\"#spinner\" hx-target=\"#exp-list\" hx-swap=\"beforeend\"><div class=\"mb-2\"><label for=\"id\">Name</label> <input type=\"text\" name=\"id\" id=\"id\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"prompt\">Prompt</label> <input type=\"textarea\" name=\"prompt\" id=\"prompt\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"competitors\">Competitors</label> <input type=\"textarea\" name=\"competitors\" id=\"competitors\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\"><span class=\"spinner-border spinner-border-sm htmx-indicator\" id=\"spinner\" role=\"status\" aria-hidden=\"true\"></span> Add</button></form></div></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Boards</a></li></ul></nav></header><div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form id=\"new-exp-form\"><div class=\"mb-2\"><label for=\"id\">Name</label> <input type=\"text\" name=\"id\" id=\"id\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"prompt\">Prompt</label> <input type=\"textarea\" name=\"prompt\" id=\"prompt\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"competitors\">Competitors</label> <input type=\"textarea\" name=\"competitors\" id=\"competitors\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\"><span class=\"spinner-border spinner-border-sm htmx-indicator\" id=\"spinner\" role=\"status\" aria-hidden=\"true\"></span> Add</button></form></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
