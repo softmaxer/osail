@@ -51,6 +51,7 @@ func runExperiment(c *gin.Context, db *gorm.DB) {
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, nil)
 	}
+	experiment.Status = "ongoing"
 	startPort := 11435
 	var models []llm.Model
 	competitorsList := strings.Split(experiment.Competitors, ",")
@@ -77,6 +78,10 @@ func runExperiment(c *gin.Context, db *gorm.DB) {
 	judgeCompletion := judge.JudgePrompt(candiateResponse1.Response, candiateResponse2.Response)
 	var judgement llm.Judgement
 	err = llm.ParseJSON(judgeCompletion, &judgement)
+	if err != nil {
+		experiment.Status = "failed"
+		c.IndentedJSON(http.StatusInternalServerError, experiment)
+	}
 
 	player1.UpdateRating(player2, float64(judgement.Result[0]))
 	player2.UpdateRating(player1, float64(judgement.Result[1]))
@@ -88,5 +93,6 @@ func runExperiment(c *gin.Context, db *gorm.DB) {
 	}
 
 	db.Model(&experiment).Where("id = ?", id).Update("competitors", strings.Join(standings, ","))
-	c.IndentedJSON(http.StatusOK, board.Competitors)
+	experiment.Status = "finished"
+	c.IndentedJSON(http.StatusOK, experiment)
 }

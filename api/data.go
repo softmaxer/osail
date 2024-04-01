@@ -11,10 +11,7 @@ type Experiment struct {
 	Competitors string `json:"competitors"`
 	Judge       string `json:"judge"`
 	Prompt      string `json:"prompt"`
-}
-
-type QuestionPool struct {
-	Prompts []string `json:"prompts"`
+	Status      string `json:"status"`
 }
 
 func connectToDB(databasePath string) (*gorm.DB, error) {
