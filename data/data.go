@@ -1,4 +1,4 @@
-package api
+package data
 
 import (
 	"gorm.io/driver/sqlite"
@@ -19,7 +19,7 @@ func connectToDB(databasePath string) (*gorm.DB, error) {
 	return db, err
 }
 
-func initDB(databasePath string, schema *Experiment) (*gorm.DB, error) {
+func InitDB(databasePath string, schema *Experiment) (*gorm.DB, error) {
 	db, err := connectToDB(databasePath)
 	if err != nil {
 		return nil, err

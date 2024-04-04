@@ -39,7 +39,7 @@ func (model *Model) expectedScore(opponent *Model) float64 {
 
 func (model *Model) UpdateRating(opponent *Model, actualScore float64) {
 	expScore := model.expectedScore(opponent)
-	model.Rating += (actualScore - expScore)
+	model.Rating += 32 * (actualScore - expScore)
 	log.Printf("Updated rating to: %.2f", model.Rating)
 }
 

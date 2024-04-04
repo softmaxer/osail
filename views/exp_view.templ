@@ -1,0 +1,62 @@
+package views
+
+import "strings"
+import "fmt"
+import "github.com/softmaxer/localflow/pkg/llm"
+import "github.com/softmaxer/localflow/views/layout"
+import "github.com/softmaxer/localflow/data"
+
+templ ExpProgress(status string) {
+	switch status {
+		case "idle":
+			<span class="badge badge-secondary">{ status } </span>
+		case "ongoing":
+			<span class="badge badge-warning">{ status } </span>
+		case "finished":
+			<span class="badge badge-success">{ status } </span>
+		case "failed":
+			<span class="badge badge-danger">{ status } </span>
+	}
+}
+
+templ ExpResults(ratings []llm.Model) {
+	<span class="badge badge-success">finished</span>
+	<ul class="ratings-list">
+		for _, comp := range ratings {
+			<li class="list-group-item">
+				Name: { comp.Name } | Rating: { fmt.Sprintf("%.2f", comp.Rating) }
+			</li>
+		}
+	</ul>
+}
+
+templ expCard(experiment data.Experiment) {
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title">{ experiment.Id } </h4>
+			<h6 class="card-subtitle mb-2 text-muted">Mistral won</h6>
+			<ul class="list-group">
+				for _, c := range strings.Split(experiment.Competitors, ",") {
+					<li class="list-group-item">{ c } </li>
+				}
+			</ul>
+			@ExpProgress(experiment.Status)
+		</div>
+		@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
+		<div class="results" id="results"></div>
+	</div>
+}
+
+templ ShowExperiment(experiment data.Experiment) {
+	<html>
+		@layout.Links()
+		<body>
+			@layout.Header()
+			@expCard(experiment)
+		</body>
+	</html>
+}
+
+templ run(expUrl string) {
+	<button type="button" hx-post={ expUrl } hx-target="#results">Run</button>
+}
