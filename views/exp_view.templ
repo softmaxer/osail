@@ -9,13 +9,13 @@ import "github.com/softmaxer/localflow/data"
 templ ExpProgress(status string) {
 	switch status {
 		case "idle":
-			<span class="badge badge-secondary">{ status } </span>
+			<span class="badge badge-secondary" id="exp-status">{ status } </span>
 		case "ongoing":
-			<span class="badge badge-warning">{ status } </span>
+			<span class="badge badge-warning" id="exp-status">{ status } </span>
 		case "finished":
-			<span class="badge badge-success">{ status } </span>
+			<span class="badge badge-success" id="exp-status">{ status } </span>
 		case "failed":
-			<span class="badge badge-danger">{ status } </span>
+			<span class="badge badge-danger" id="exp-status">{ status } </span>
 	}
 }
 
@@ -32,7 +32,7 @@ templ ExpResults(ratings []llm.Model) {
 
 templ expCard(experiment data.Experiment) {
 	<div class="card">
-		<div class="card-body">
+		<div class="card-body" hx-post={string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id)))} hx-target="#exp-status" hx-trigger="load">
 			<h4 class="card-title">{ experiment.Id } </h4>
 			<h6 class="card-subtitle mb-2 text-muted">Mistral won</h6>
 			<ul class="list-group">
@@ -42,6 +42,7 @@ templ expCard(experiment data.Experiment) {
 			</ul>
 			@ExpProgress(experiment.Status)
 		</div>
+    <div class="exp-progress" id="exp-progress"></div>
 		@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
 		<div class="results" id="results"></div>
 	</div>
