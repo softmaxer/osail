@@ -11,99 +11,8 @@ import "io"
 import "bytes"
 
 import "github.com/softmaxer/localflow/views/layout"
-
-func displayExperiments() templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_displayExperiments_6859`,
-		Function: `function __templ_displayExperiments_6859(){document.addEventListener('DOMContentLoaded', () => {
-  fetch('/experiments/list')
-    .then(response => response.json())
-    .then(data => {
-      const expList = document.getElementById('exp-container');
-      for (let i = 0; i < data.length; i++) {
-        let card1 = document.createElement('div');
-        card1.className = "card";
-        let cardHeader = document.createElement('div');
-        cardHeader.className = "card-header";
-        cardHeader.innerHTML = data[i]["id"];
-        let cardBody = document.createElement('div');
-        cardBody.className = "card-body";
-        let cardtitle = document.createElement('h5');
-        cardtitle.className = "card-title";
-        cardtitle.innerHTML = data[i]["judge"];
-        let cardText = document.createElement('p');
-        cardText.className = "card-text";
-        cardText.innerHTML = data[i]["prompt"];
-        let cardLink = document.createElement('a');
-        cardLink.className = "card-link ml-5";
-        let linkText = document.createTextNode('Open');
-        cardLink.appendChild(linkText)
-        cardLink.title = "Open";
-        cardLink.href = "/experiments/" + data[i]["id"] + "/open"
-        cardBody.appendChild(cardtitle);
-        cardBody.appendChild(cardText);
-        card1.appendChild(cardHeader);
-        card1.appendChild(cardBody);
-        card1.appendChild(cardLink);
-
-        expList.appendChild(card1)
-      }
-    })
-    .catch(error => console.error('Error:', error));
-});
-}`,
-		Call:       templ.SafeScript(`__templ_displayExperiments_6859`),
-		CallInline: templ.SafeScriptInline(`__templ_displayExperiments_6859`),
-	}
-}
-
-func addExpEventListener() templ.ComponentScript {
-	return templ.ComponentScript{
-		Name: `__templ_addExpEventListener_1c8c`,
-		Function: `function __templ_addExpEventListener_1c8c(){document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('new-exp-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const id = document.getElementById("id").value;
-    const prompt = document.getElementById("prompt").value;
-    const competitors = document.getElementById("competitors").value;
-    const judge = document.getElementById("judge").value;
-    let reqBody = JSON.stringify({"id": id, "prompt": prompt, "judge": judge, "competitors": competitors, "status": "idle"});
-    let expList = document.getElementById('exp-container');
-    fetch("/experiments/add", {method: 'POST', headers: {'Content-type': 'application/json'}, body: reqBody}).then(response => response.json()).then(data => {
-        let card1 = document.createElement('div');
-        card1.className = "card";
-        let cardHeader = document.createElement('div');
-        cardHeader.className = "card-header";
-        cardHeader.innerHTML = data["id"];
-        let cardBody = document.createElement('div');
-        cardBody.className = "card-body";
-        let cardtitle = document.createElement('h5');
-        cardtitle.className = "card-title";
-        cardtitle.innerHTML = data["judge"];
-        let cardText = document.createElement('p');
-        cardText.className = "card-text";
-        cardText.innerHTML = data["prompt"];
-        let cardLink = document.createElement('a');
-        cardLink.className = "card-link ml-5";
-        let linkText = document.createTextNode('Open');
-        cardLink.appendChild(linkText)
-        cardLink.title = "Open";
-        cardLink.href = "/experiments/" + data["id"] + "/open"
-        cardBody.appendChild(cardtitle);
-        cardBody.appendChild(cardText);
-        card1.appendChild(cardHeader);
-        card1.appendChild(cardBody);
-        card1.appendChild(cardLink);
-
-        expList.appendChild(card1);
-      }).catch(error => console.error('Error: ', error));
-  });
-  });
-}`,
-		Call:       templ.SafeScript(`__templ_addExpEventListener_1c8c`),
-		CallInline: templ.SafeScriptInline(`__templ_addExpEventListener_1c8c`),
-	}
-}
+import "github.com/softmaxer/localflow/data"
+import "fmt"
 
 func Experiments() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -130,19 +39,179 @@ func Experiments() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = displayExperiments().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = addExpEventListener().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = layout.Header().Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form id=\"new-exp-form\"><div class=\"mb-2\"><label for=\"id\">Name</label> <input type=\"text\" name=\"id\" id=\"id\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"prompt\">Prompt</label> <input type=\"textarea\" name=\"prompt\" id=\"prompt\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"competitors\">Competitors</label> <input type=\"textarea\" name=\"competitors\" id=\"competitors\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\">Add</button></form></div></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"row mt-4 g-4\"><div class=\"col-8\" id=\"exp-list\" hx-get=\"/experiments/list\" hx-target=\"#exp-container\" hx-trigger=\"load\"><h1 class=\"mb-4\">Experiments</h1><div class=\"exp-container\" id=\"exp-container\"></div></div><div class=\"col-4\"><h1 class=\"mb-4\">Start new experiment</h1><form id=\"new-exp-form\" hx-post=\"/experiments/add\" hx-target=\"#exp-container\" hx-swap=\"beforebegin\" hx-encoding=\"multipart/form-data\"><div class=\"mb-2\"><label for=\"name\">Name</label> <input type=\"text\" name=\"name\" id=\"name\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"system\">System Prompt</label> <input type=\"textarea\" name=\"system\" id=\"system\" class=\"form-control\"></div><div class=\"mb-3\"><label for=\"promptpath\">Prompt</label> <input type=\"file\" name=\"promptpath\" id=\"promptpath\" class=\"form-control\"></div><input type=\"hidden\" name=\"promptpath\" id=\"promptpath\" class=\"form-control\"><div class=\"mb-3\"><label for=\"judge\">Judge model</label> <input type=\"text\" name=\"judge\" id=\"judge\" class=\"form-control\"></div><button type=\"submit\" class=\"btn btn-dark\">Add</button></form></div></div></body></html>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func FailedExpReq() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Bad request </h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func FailedCreateExp() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h1>Failed to create experiment</h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func AllExperiments(exps []data.Experiment) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		for idx := len(exps) - 1; idx >= 0; idx-- {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"card\" style=\"width: 18rem\"><div class=\"card-body\"><h5 class=\"card-title\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(exps[idx].Name)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/experiments.templ`, Line: 63, Col: 46}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><p class=\"card-text\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(exps[idx].System)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/experiments.templ`, Line: 64, Col: 46}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 templ.SafeURL = templ.URL(fmt.Sprintf("/experiments/%s/open", exps[idx].Id))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var7)))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"btn btn-dark\">Open</a></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func PreprendExperiment(exp data.Experiment) templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"card\" style=\"width: 18rem\"><div class=\"card-body\"><h5 class=\"card-title\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(exp.Name)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/experiments.templ`, Line: 74, Col: 40}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><p class=\"card-text\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var10 string
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(exp.System)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/experiments.templ`, Line: 75, Col: 40}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var11 templ.SafeURL = templ.URL(fmt.Sprintf("/experiments/%s/open", exp.Id))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var11)))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" class=\"btn btn-dark\">Open</a></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

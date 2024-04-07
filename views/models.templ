@@ -1,0 +1,50 @@
+package views
+
+import "github.com/softmaxer/localflow/data"
+import "fmt"
+
+templ RegisterModels(expId string) {
+	<div>
+		<h1 class="mb-4">Register models</h1>
+		<form id="new-model-form" hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/add", expId))) } hx-target="#model-container" hx-swap="beforebegin" hx-ext="json-enc">
+			<div class="mb-2">
+				<label for="name">Name</label>
+				<input type="text" name="name" id="name" class="form-control"/>
+			</div>
+			<div class="mb-3">
+				<label for="host">Host</label>
+				<input type="textarea" name="host" id="host" class="form-control"/>
+			</div>
+			<div class="mb-3">
+				<label for="port">port</label>
+				<input type="text" name="port" id="port" class="form-control"/>
+			</div>
+			<button type="submit" class="btn btn-dark">
+				Add
+			</button>
+		</form>
+	</div>
+}
+
+templ Models(expId string) {
+	<div class="row mt-4 g-4">
+		<div class="col-8" id="model-list" hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="load" hx-ext="json-enc">
+			<h1 class="mb-4">Models</h1>
+			<div class="model-container" id="model-container"></div>
+		</div>
+	</div>
+}
+
+templ ModelsList(models []data.Competitor) {
+	for idx := len(models)-1; idx >= 0; idx-- {
+		<li class="list-group-item">
+			Name: { models[idx].Name } | Rating: { fmt.Sprintf("%.2f", models[idx].Rating) }
+		</li>
+	}
+}
+
+templ PrependModel(competitor data.Competitor) {
+	<li class="list-group-item">
+		Name: { competitor.Name } | Rating: { fmt.Sprintf("%.2f", competitor.Rating) }
+	</li>
+}

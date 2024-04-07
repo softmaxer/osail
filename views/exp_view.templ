@@ -1,6 +1,5 @@
 package views
 
-import "strings"
 import "fmt"
 import "github.com/softmaxer/localflow/pkg/llm"
 import "github.com/softmaxer/localflow/views/layout"
@@ -9,18 +8,17 @@ import "github.com/softmaxer/localflow/data"
 templ ExpProgress(status string) {
 	switch status {
 		case "idle":
-			<span class="badge badge-secondary" id="exp-status">{ status } </span>
+			<span class="badge badge-secondary">{ status } </span>
 		case "ongoing":
-			<span class="badge badge-warning" id="exp-status">{ status } </span>
+			<span class="badge badge-warning">{ status } </span>
 		case "finished":
-			<span class="badge badge-success" id="exp-status">{ status } </span>
+			<span class="badge badge-success">{ status } </span>
 		case "failed":
-			<span class="badge badge-danger" id="exp-status">{ status } </span>
+			<span class="badge badge-danger">{ status } </span>
 	}
 }
 
 templ ExpResults(ratings []llm.Model) {
-	<span class="badge badge-success">finished</span>
 	<ul class="ratings-list">
 		for _, comp := range ratings {
 			<li class="list-group-item">
@@ -32,17 +30,18 @@ templ ExpResults(ratings []llm.Model) {
 
 templ expCard(experiment data.Experiment) {
 	<div class="card">
-		<div class="card-body" hx-post={string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id)))} hx-target="#exp-status" hx-trigger="load">
+		<div class="card-body" hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-target="#exp-status" hx-trigger="load">
 			<h4 class="card-title">{ experiment.Id } </h4>
 			<h6 class="card-subtitle mb-2 text-muted">Mistral won</h6>
-			<ul class="list-group">
-				for _, c := range strings.Split(experiment.Competitors, ",") {
-					<li class="list-group-item">{ c } </li>
-				}
-			</ul>
-			@ExpProgress(experiment.Status)
+			//<ul class="list-group">
+			//	for _, c := range strings.Split(experiment.Prompts, "/") {
+			//		<li class="list-group-item">{ c } </li>
+			//	}
+			//</ul>
+			<div class="exp-status" id="exp-status"></div>
+			@Models(experiment.Id)
+			@RegisterModels(experiment.Id)
 		</div>
-    <div class="exp-progress" id="exp-progress"></div>
 		@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
 		<div class="results" id="results"></div>
 	</div>
@@ -59,5 +58,5 @@ templ ShowExperiment(experiment data.Experiment) {
 }
 
 templ run(expUrl string) {
-	<button type="button" hx-post={ expUrl } hx-target="#results">Run</button>
+	<button type="button" id="run-exp-button" hx-post={ expUrl } hx-target="#results">Run</button>
 }

@@ -16,7 +16,7 @@ func render(c *gin.Context, status int, template templ.Component) error {
 }
 
 func Router(dbPath string) *gin.Engine {
-	db, err := data.InitDB(dbPath, &data.Experiment{})
+	db, err := data.InitDB(dbPath, &data.Experiment{}, &data.Competitor{})
 	if err != nil {
 		log.Fatal("Unable to initialize SQLite Database: ", err.Error())
 	}
@@ -32,6 +32,12 @@ func Router(dbPath string) *gin.Engine {
 	})
 	router.POST("/experiments/add", func(ctx *gin.Context) {
 		addExperiment(ctx, db)
+	})
+	router.GET("/experiments/:id/competitors/list", func(ctx *gin.Context) {
+		getCompetitors(ctx, db)
+	})
+	router.POST("/experiments/:id/competitors/add", func(ctx *gin.Context) {
+		addCompetitor(ctx, db)
 	})
 	router.GET("/experiments/:id", func(ctx *gin.Context) {
 		getExperimentById(ctx, db)

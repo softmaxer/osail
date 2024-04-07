@@ -1,115 +1,35 @@
 package views
 
 import "github.com/softmaxer/localflow/views/layout"
-
-script displayExperiments() {
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('/experiments/list')
-    .then(response => response.json())
-    .then(data => {
-      const expList = document.getElementById('exp-container');
-      for (let i = 0; i < data.length; i++) {
-        let card1 = document.createElement('div');
-        card1.className = "card";
-        let cardHeader = document.createElement('div');
-        cardHeader.className = "card-header";
-        cardHeader.innerHTML = data[i]["id"];
-        let cardBody = document.createElement('div');
-        cardBody.className = "card-body";
-        let cardtitle = document.createElement('h5');
-        cardtitle.className = "card-title";
-        cardtitle.innerHTML = data[i]["judge"];
-        let cardText = document.createElement('p');
-        cardText.className = "card-text";
-        cardText.innerHTML = data[i]["prompt"];
-        let cardLink = document.createElement('a');
-        cardLink.className = "card-link ml-5";
-        let linkText = document.createTextNode('Open');
-        cardLink.appendChild(linkText)
-        cardLink.title = "Open";
-        cardLink.href = "/experiments/" + data[i]["id"] + "/open"
-        cardBody.appendChild(cardtitle);
-        cardBody.appendChild(cardText);
-        card1.appendChild(cardHeader);
-        card1.appendChild(cardBody);
-        card1.appendChild(cardLink);
-
-        expList.appendChild(card1)
-      }
-    })
-    .catch(error => console.error('Error:', error));
-});
-}
-
-script addExpEventListener() {
-  document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('new-exp-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const id = document.getElementById("id").value;
-    const prompt = document.getElementById("prompt").value;
-    const competitors = document.getElementById("competitors").value;
-    const judge = document.getElementById("judge").value;
-    let reqBody = JSON.stringify({"id": id, "prompt": prompt, "judge": judge, "competitors": competitors, "status": "idle"});
-    let expList = document.getElementById('exp-container');
-    fetch("/experiments/add", {method: 'POST', headers: {'Content-type': 'application/json'}, body: reqBody}).then(response => response.json()).then(data => {
-        let card1 = document.createElement('div');
-        card1.className = "card";
-        let cardHeader = document.createElement('div');
-        cardHeader.className = "card-header";
-        cardHeader.innerHTML = data["id"];
-        let cardBody = document.createElement('div');
-        cardBody.className = "card-body";
-        let cardtitle = document.createElement('h5');
-        cardtitle.className = "card-title";
-        cardtitle.innerHTML = data["judge"];
-        let cardText = document.createElement('p');
-        cardText.className = "card-text";
-        cardText.innerHTML = data["prompt"];
-        let cardLink = document.createElement('a');
-        cardLink.className = "card-link ml-5";
-        let linkText = document.createTextNode('Open');
-        cardLink.appendChild(linkText)
-        cardLink.title = "Open";
-        cardLink.href = "/experiments/" + data["id"] + "/open"
-        cardBody.appendChild(cardtitle);
-        cardBody.appendChild(cardText);
-        card1.appendChild(cardHeader);
-        card1.appendChild(cardBody);
-        card1.appendChild(cardLink);
-
-        expList.appendChild(card1);
-      }).catch(error => console.error('Error: ', error));
-  });
-  });
-}
+import "github.com/softmaxer/localflow/data"
+import "fmt"
 
 templ Experiments() {
 	<html>
 		@layout.Links()
 		<body>
-			@displayExperiments()
-			@addExpEventListener()
 			@layout.Header()
 			<div class="row mt-4 g-4">
-				<div class="col-8" id="exp-list">
+				<div class="col-8" id="exp-list" hx-get="/experiments/list" hx-target="#exp-container" hx-trigger="load">
 					<h1 class="mb-4">Experiments</h1>
 					<div class="exp-container" id="exp-container"></div>
 				</div>
 				<div class="col-4">
 					<h1 class="mb-4">Start new experiment</h1>
-					<form id="new-exp-form">
+					<form id="new-exp-form" hx-post="/experiments/add" hx-target="#exp-container" hx-swap="beforebegin" hx-encoding="multipart/form-data">
 						<div class="mb-2">
-							<label for="id">Name</label>
-							<input type="text" name="id" id="id" class="form-control"/>
+							<label for="name">Name</label>
+							<input type="text" name="name" id="name" class="form-control"/>
 						</div>
 						<div class="mb-3">
-							<label for="prompt">Prompt</label>
-							<input type="textarea" name="prompt" id="prompt" class="form-control"/>
+							<label for="system">System Prompt</label>
+							<input type="textarea" name="system" id="system" class="form-control"/>
 						</div>
 						<div class="mb-3">
-							<label for="competitors">Competitors</label>
-							<input type="textarea" name="competitors" id="competitors" class="form-control"/>
+							<label for="promptpath">Prompt</label>
+							<input type="file" name="promptpath" id="promptpath" class="form-control"/>
 						</div>
+						<input type="hidden" name="promptpath" id="promptpath" class="form-control"/>
 						<div class="mb-3">
 							<label for="judge">Judge model</label>
 							<input type="text" name="judge" id="judge" class="form-control"/>
@@ -122,4 +42,34 @@ templ Experiments() {
 			</div>
 		</body>
 	</html>
+}
+
+templ FailedExpReq() {
+	<h1>Bad request </h1>
+}
+
+templ FailedCreateExp() {
+	<h1>Failed to create experiment</h1>
+}
+
+templ AllExperiments(exps []data.Experiment) {
+	for idx := len(exps) - 1; idx >= 0; idx-- {
+		<div class="card" style="width: 18rem">
+			<div class="card-body">
+				<h5 class="card-title">{ exps[idx].Name }</h5>
+				<p class="card-text">{ exps[idx].System }</p>
+				<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exps[idx].Id)) } class="btn btn-dark">Open</a>
+			</div>
+		</div>
+	}
+}
+
+templ PreprendExperiment(exp data.Experiment) {
+	<div class="card" style="width: 18rem">
+		<div class="card-body">
+			<h5 class="card-title">{ exp.Name }</h5>
+			<p class="card-text">{ exp.System }</p>
+			<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exp.Id)) } class="btn btn-dark">Open</a>
+		</div>
+	</div>
 }
