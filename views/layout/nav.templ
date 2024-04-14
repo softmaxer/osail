@@ -1,0 +1,45 @@
+package layout
+
+import "github.com/softmaxer/localflow/views/styles"
+
+templ MainMenu() {
+	<ul class={ styles.NavBarList() }>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/" class={ styles.NavBarItemLink("Koulen") }>Home</a>
+		</li>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/" class={ styles.NavBarItemLink("Koulen") }>Publish</a>
+		</li>
+		<li class={ styles.NavBarItem("right") }>
+			<a href="https://www.github.com/softmaxer/localflow" class={ styles.NavBarItemLink("Koulen") }>Contribute</a>
+		</li>
+	</ul>
+}
+
+templ ExperimentsMenu() {
+	<ul class={ styles.NavBarList() }>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/" class={ styles.NavBarItemLink("Koulen") }>Back</a>
+		</li>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/" class={ styles.NavBarItemLink("Koulen") }>Publish</a>
+		</li>
+		<li class={ styles.NavBarItem("right") }>
+			<a href="https://www.github.com/softmaxer/localflow" class={ styles.NavBarItemLink("Koulen") }>Contribute</a>
+		</li>
+	</ul>
+}
+
+templ ExperimentsPageMenu() {
+	<ul class={ styles.NavBarList() }>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/experiments" class={ styles.NavBarItemLink("Koulen") }>Back</a>
+		</li>
+		<li class={ styles.NavBarItem("left") }>
+			<a href="/" class={ styles.NavBarItemLink("Koulen") }>Publish</a>
+		</li>
+		<li class={ styles.NavBarItem("right") }>
+			<a href="https://www.github.com/softmaxer/localflow" class={ styles.NavBarItemLink("Koulen") }>Contribute</a>
+		</li>
+	</ul>
+}

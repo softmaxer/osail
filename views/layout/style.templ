@@ -2,35 +2,23 @@ package layout
 
 templ Style() {
 	<style>
-    header {
-      display: flex;
-      justify-content: space-between;
-    }
-
-
-    nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-    }
-
-    li {
-        margin-right: 16px;
-    }
-
     a {
-        color: #333;
         text-decoration: none;
     }
-
-    .main {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 100vh;
-      flex-direction: column;
+    a:link { 
+      text-decoration: none; 
+    } 
+    a:visited { 
+      text-decoration: none; 
+    } 
+    a:hover { 
+      text-decoration: none; 
+    } 
+    a:active { 
+      text-decoration: none; 
+    }
+    input[type="file"] {
+      display: none;
     }
   </style>
 }

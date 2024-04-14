@@ -23,7 +23,7 @@ func Style() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>\n    header {\n      display: flex;\n      justify-content: space-between;\n    }\n\n\n    nav ul {\n        list-style: none;\n        margin: 0;\n        padding: 0;\n        display: flex;\n    }\n\n    li {\n        margin-right: 16px;\n    }\n\n    a {\n        color: #333;\n        text-decoration: none;\n    }\n\n    .main {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      text-align: center;\n      min-height: 100vh;\n      flex-direction: column;\n    }\n  </style>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<style>\n    a {\n        text-decoration: none;\n    }\n    a:link { \n      text-decoration: none; \n    } \n    a:visited { \n      text-decoration: none; \n    } \n    a:hover { \n      text-decoration: none; \n    } \n    a:active { \n      text-decoration: none; \n    }\n    input[type=\"file\"] {\n      display: none;\n    }\n  </style>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

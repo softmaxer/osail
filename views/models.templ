@@ -2,24 +2,25 @@ package views
 
 import "github.com/softmaxer/localflow/data"
 import "fmt"
+import "github.com/softmaxer/localflow/views/styles"
 
 templ RegisterModels(expId string) {
-	<div>
-		<h1 class="mb-4">Register models</h1>
-		<form id="new-model-form" hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/add", expId))) } hx-target="#model-container" hx-swap="beforebegin" hx-ext="json-enc">
+	<div class={ styles.ModelCard() } style="margin-right: 20px;">
+		<p class={ styles.Text("Koulen", "26", "black") }>Add</p>
+		<form id="add-modal" hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/add", expId))) } hx-target="#model-container" hx-swap="afterbegin" hx-ext="json-enc">
 			<div class="mb-2">
-				<label for="name">Name</label>
+				<label for="name" class={ styles.Text("Koulen", "20", "black") }>Name</label>
 				<input type="text" name="name" id="name" class="form-control"/>
 			</div>
 			<div class="mb-3">
-				<label for="host">Host</label>
+				<label for="host" class={ styles.Text("Koulen", "20", "black") }>Host</label>
 				<input type="textarea" name="host" id="host" class="form-control"/>
 			</div>
 			<div class="mb-3">
-				<label for="port">port</label>
+				<label for="port" class={ styles.Text("Koulen", "20", "black") }>port</label>
 				<input type="text" name="port" id="port" class="form-control"/>
 			</div>
-			<button type="submit" class="btn btn-dark">
+			<button type="submit" id="modal-submit" class="btn btn-dark">
 				Add
 			</button>
 		</form>
@@ -27,24 +28,29 @@ templ RegisterModels(expId string) {
 }
 
 templ Models(expId string) {
-	<div class="row mt-4 g-4">
-		<div class="col-8" id="model-list" hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="load" hx-ext="json-enc">
-			<h1 class="mb-4">Models</h1>
-			<div class="model-container" id="model-container"></div>
+	<div class={ styles.CenteredContainer() } hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="load" hx-ext="json-enc">
+		<p class={ styles.Text("Koulen", "32", "white") }>Models</p>
+		<div class={ styles.FlexIt("row") } style="gap: 20px;">
+			<div class={ styles.FlexNoSpace("row", "50px") } id="model-container" style="gap: 20px; flex-wrap: wrap; align-items: center;"></div>
+			@RegisterModels(expId)
 		</div>
 	</div>
 }
 
-templ ModelsList(models []data.Competitor) {
+templ ModelsList(models []data.Competitor, expId string) {
 	for idx := len(models)-1; idx >= 0; idx-- {
-		<li class="list-group-item">
-			Name: { models[idx].Name } | Rating: { fmt.Sprintf("%.2f", models[idx].Rating) }
-		</li>
+		<div class={ styles.ModelCard() }>
+			<p class={ styles.Text("Koulen", "22", "black") }>{ models[idx].Name } </p>
+			<img src="https://avatars.githubusercontent.com/u/151674099?v=4" width="150" height="150"/>
+			<p class={ styles.Text("Koulen", "22", "teal") }>{ fmt.Sprintf("%.2f", models[idx].Rating) }</p>
+		</div>
 	}
 }
 
 templ PrependModel(competitor data.Competitor) {
-	<li class="list-group-item">
-		Name: { competitor.Name } | Rating: { fmt.Sprintf("%.2f", competitor.Rating) }
-	</li>
+	<div class={ styles.ModelCard() }>
+		<p class={ styles.Text("Koulen", "22", "black") }>{ competitor.Name } </p>
+		<img src="https://avatars.githubusercontent.com/u/151674099?v=4" width="150" height="150"/>
+		<p class={ styles.Text("Koulen", "22", "teal") }>{ fmt.Sprintf("%.2f", competitor.Rating) }</p>
+	</div>
 }

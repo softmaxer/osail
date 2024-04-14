@@ -4,17 +4,18 @@ import "fmt"
 import "github.com/softmaxer/localflow/pkg/llm"
 import "github.com/softmaxer/localflow/views/layout"
 import "github.com/softmaxer/localflow/data"
+import "github.com/softmaxer/localflow/views/styles"
 
 templ ExpProgress(status string) {
 	switch status {
 		case "idle":
-			<span class="badge badge-secondary">{ status } </span>
+			<span class={ styles.Tag("grey", "white") }>{ status } </span>
 		case "ongoing":
-			<span class="badge badge-warning">{ status } </span>
+			<span class={ styles.Tag("yellow", "black") }>{ status } </span>
 		case "finished":
-			<span class="badge badge-success">{ status } </span>
+			<span class={ styles.Tag("green", "white") }>{ status } </span>
 		case "failed":
-			<span class="badge badge-danger">{ status } </span>
+			<span class={ styles.Tag("red", "white") }>{ status } </span>
 	}
 }
 
@@ -28,35 +29,23 @@ templ ExpResults(ratings []llm.Model) {
 	</ul>
 }
 
-templ expCard(experiment data.Experiment) {
-	<div class="card">
-		<div class="card-body" hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-target="#exp-status" hx-trigger="load">
-			<h4 class="card-title">{ experiment.Id } </h4>
-			<h6 class="card-subtitle mb-2 text-muted">Mistral won</h6>
-			//<ul class="list-group">
-			//	for _, c := range strings.Split(experiment.Prompts, "/") {
-			//		<li class="list-group-item">{ c } </li>
-			//	}
-			//</ul>
-			<div class="exp-status" id="exp-status"></div>
-			@Models(experiment.Id)
-			@RegisterModels(experiment.Id)
-		</div>
-		@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
-		<div class="results" id="results"></div>
-	</div>
-}
-
 templ ShowExperiment(experiment data.Experiment) {
 	<html>
 		@layout.Links()
-		<body>
-			@layout.Header()
-			@expCard(experiment)
+		<body class={ styles.ColorMe("#27313E") }>
+			@layout.ExperimentsPageMenu()
+			<div class={ styles.CenteredContainer() }>
+				<div class={ styles.BasicFlex() } hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-trigger="load" hx-swap="beforeend">
+					<p class={ styles.Text("Koulen", "42", "white") }>{ experiment.Name }</p>
+				</div>
+				<p class={ styles.Text("Koulen", "30", "white") }>{ experiment.System } </p>
+				@Models(experiment.Id)
+				@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
+			</div>
 		</body>
 	</html>
 }
 
 templ run(expUrl string) {
-	<button type="button" id="run-exp-button" hx-post={ expUrl } hx-target="#results">Run</button>
+	<button class={ styles.SmallButton("white", "black") } type="button" id="run-exp-button" hx-post={ expUrl }>Run</button>
 }

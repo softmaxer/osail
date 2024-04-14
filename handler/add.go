@@ -37,8 +37,6 @@ func addExperiment(c *gin.Context, db *gorm.DB) {
 		render(c, http.StatusInternalServerError, views.FailedCreateExp())
 	}
 
-	log.Println("These are the file contents that I read: ")
-	log.Println(string(fileContents))
 	exp := data.Experiment{
 		Name:    newExp.Name,
 		Judge:   newExp.Judge,

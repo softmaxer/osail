@@ -3,73 +3,49 @@ package views
 import "github.com/softmaxer/localflow/views/layout"
 import "github.com/softmaxer/localflow/data"
 import "fmt"
+import "github.com/softmaxer/localflow/views/styles"
 
 templ Experiments() {
 	<html>
 		@layout.Links()
-		<body>
-			@layout.Header()
-			<div class="row mt-4 g-4">
-				<div class="col-8" id="exp-list" hx-get="/experiments/list" hx-target="#exp-container" hx-trigger="load">
-					<h1 class="mb-4">Experiments</h1>
-					<div class="exp-container" id="exp-container"></div>
+		<body class={ styles.ColorMe("#27313E") }>
+			@layout.ExperimentsMenu()
+			<div class={ styles.FlexIt("row") }>
+				<div class={ styles.MovableContainer("0.7") } id="experiments-list" hx-get="/experiments/list" hx-target="#exp-container" hx-trigger="load">
+					<p class={ styles.Text("Koulen", "36", "white") } style="margin-top: 70px; margin-left: 20px;">Experiments</p>
+					<div class={ styles.ExpContainer() } id="exp-container"></div>
 				</div>
-				<div class="col-4">
-					<h1 class="mb-4">Start new experiment</h1>
-					<form id="new-exp-form" hx-post="/experiments/add" hx-target="#exp-container" hx-swap="beforebegin" hx-encoding="multipart/form-data">
-						<div class="mb-2">
-							<label for="name">Name</label>
-							<input type="text" name="name" id="name" class="form-control"/>
-						</div>
-						<div class="mb-3">
-							<label for="system">System Prompt</label>
-							<input type="textarea" name="system" id="system" class="form-control"/>
-						</div>
-						<div class="mb-3">
-							<label for="promptpath">Prompt</label>
-							<input type="file" name="promptpath" id="promptpath" class="form-control"/>
-						</div>
-						<input type="hidden" name="promptpath" id="promptpath" class="form-control"/>
-						<div class="mb-3">
-							<label for="judge">Judge model</label>
-							<input type="text" name="judge" id="judge" class="form-control"/>
-						</div>
-						<button type="submit" class="btn btn-dark">
-							Add
-						</button>
-					</form>
+				<div class={ styles.MovableContainer("0.3") }>
+					<p class={ styles.Text("Koulen", "36", "white") } style="margin-top: 70px; margin-left: 20px;">New</p>
+					@Form()
 				</div>
 			</div>
 		</body>
 	</html>
 }
 
-templ FailedExpReq() {
-	<h1>Bad request </h1>
-}
-
-templ FailedCreateExp() {
-	<h1>Failed to create experiment</h1>
-}
-
 templ AllExperiments(exps []data.Experiment) {
 	for idx := len(exps) - 1; idx >= 0; idx-- {
-		<div class="card" style="width: 18rem">
-			<div class="card-body">
-				<h5 class="card-title">{ exps[idx].Name }</h5>
-				<p class="card-text">{ exps[idx].System }</p>
-				<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exps[idx].Id)) } class="btn btn-dark">Open</a>
+		<div class="col-lg-5 col-md-5 col-5" style="margin-bottom:30px;">
+			<div class={ styles.ExperimentCard() }>
+				<div class="card-body">
+					<h5 class="card-title">{ exps[idx].Name }</h5>
+					<p class="card-text">{ exps[idx].System }</p>
+					<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exps[idx].Id)) } class="btn btn-dark">Open</a>
+				</div>
 			</div>
 		</div>
 	}
 }
 
 templ PreprendExperiment(exp data.Experiment) {
-	<div class="card" style="width: 18rem">
-		<div class="card-body">
-			<h5 class="card-title">{ exp.Name }</h5>
-			<p class="card-text">{ exp.System }</p>
-			<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exp.Id)) } class="btn btn-dark">Open</a>
+	<div class="col-lg-5 col-md-5 col-5" style="margin-bottom:10px;">
+		<div class={ styles.ExperimentCard() }>
+			<div class="card-body">
+				<h5 class="card-title">{ exp.Name }</h5>
+				<p class="card-text">{ exp.System }</p>
+				<a href={ templ.URL(fmt.Sprintf("/experiments/%s/open", exp.Id)) } class="btn btn-dark">Open</a>
+			</div>
 		</div>
 	</div>
 }

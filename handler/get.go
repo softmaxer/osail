@@ -46,5 +46,5 @@ func getCompetitors(c *gin.Context, db *gorm.DB) {
 		render(c, 500, views.FailedExpReq())
 		return
 	}
-	render(c, 200, views.ModelsList(competitors))
+	render(c, 200, views.ModelsList(competitors, id))
 }

@@ -1,0 +1,66 @@
+package views
+
+import "github.com/softmaxer/localflow/views/layout"
+import "github.com/softmaxer/localflow/views/styles"
+
+templ tempForm() {
+	@layout.Style()
+	<div class="col-4 formcard">
+		<form id="new-exp-form" hx-post="/experiments/add" hx-target="#exp-container" hx-swap="afterbegin" hx-encoding="multipart/form-data">
+			<div class="mb-2">
+				<label for="name" class={ styles.ColorMe("white") }>Name</label>
+				<input type="text" name="name" id="name" class="form-control"/>
+			</div>
+			<div class="mb-3">
+				<label for="system" class={ styles.ColorMe("white") }>System Prompt</label>
+				<input type="textarea" name="system" id="system" class="form-control"/>
+			</div>
+			<div class="mb-3">
+				<label for="promptpath" class={ styles.ColorMe("white") }>Prompt</label>
+				<input type="file" name="promptpath" id="promptpath" class="form-control"/>
+			</div>
+			<input type="hidden" name="promptpath" id="promptpath" class="form-control"/>
+			<div class="mb-3">
+				<label for="judge" class={ styles.ColorMe("white") }>Judge model</label>
+				<input type="text" name="judge" id="judge" class="form-control"/>
+			</div>
+			<button type="submit" class="btn btn-dark">
+				Add
+			</button>
+		</form>
+	</div>
+}
+
+templ Form() {
+	<form id="new-exp-form" hx-post="/experiments/add" hx-target="#exp-container" hx-swap="afterbegin" hx-encoding="multipart/form-data">
+		<div class="mb-2">
+			<label for="name" class={ styles.Text("Koulen", "24", "white") }>Name</label>
+			<input type="text" name="name" id="name" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<label for="system" class={ styles.Text("Koulen", "24", "white") }>System Prompt</label>
+			<input type="textarea" name="system" id="system" class="form-control"/>
+		</div>
+		<div class="mb-3">
+			<p class={ styles.Text("Koulen", "24", "white") }>Prompt</p>
+			<label for="promptpath" class={ styles.Text("Koulen", "16", "white"), styles.CustomFileUpload() }>Choose file</label>
+			<input type="file" name="promptpath" id="promptpath"/>
+		</div>
+		<input type="hidden" name="promptpath" id="promptpath" class="form-control"/>
+		<div class="mb-3">
+			<label for="judge" class={ styles.Text("Koulen", "24", "white") }>Judge model</label>
+			<input type="text" name="judge" id="judge" class="form-control"/>
+		</div>
+		<button type="submit" class={ styles.Button("white", "black") }>
+			Add
+		</button>
+	</form>
+}
+
+templ FailedExpReq() {
+	<h1>Bad request </h1>
+}
+
+templ FailedCreateExp() {
+	<h1>Failed to create experiment</h1>
+}

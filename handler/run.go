@@ -11,7 +11,6 @@ import (
 	"github.com/softmaxer/localflow/data"
 	"github.com/softmaxer/localflow/pkg/board"
 	"github.com/softmaxer/localflow/pkg/llm"
-	"github.com/softmaxer/localflow/views"
 )
 
 func run(ctx *gin.Context, db *gorm.DB) {
@@ -19,8 +18,7 @@ func run(ctx *gin.Context, db *gorm.DB) {
 	var experiment data.Experiment
 	err := db.First(&experiment, "id = ?", id).Error
 	if err != nil {
-		// db.Model(&experiment).Update("status", "failed")
-		render(ctx, 400, views.FailedExpReq())
+		db.Model(&experiment).Update("status", "failed")
 	}
 
 	db.Model(&experiment).Update("status", "ongoing")
@@ -63,7 +61,7 @@ func run(ctx *gin.Context, db *gorm.DB) {
 		var judgement llm.Judgement
 		err = llm.ParseJSON(judgeCompletion, &judgement)
 		if err != nil {
-			render(ctx, 500, views.ExpProgress("failed"))
+			db.Model(&experiment).Update("status", "failed")
 		}
 
 		player1.UpdateRating(player2, float64(judgement.Result[0]))
@@ -71,5 +69,4 @@ func run(ctx *gin.Context, db *gorm.DB) {
 	}
 
 	db.Model(&experiment).Update("status", "finished")
-	render(ctx, 200, views.ExpResults(board.Competitors))
 }

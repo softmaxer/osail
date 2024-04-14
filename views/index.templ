@@ -1,18 +1,23 @@
 package views
 
 import "github.com/softmaxer/localflow/views/layout"
+import "github.com/softmaxer/localflow/views/styles"
 
 templ Home() {
 	<html>
 		@layout.Links()
-		<body>
-			@layout.Header()
-			<div class="main">
-				<div class="main_title">
-					<h1>Local leaderboard for evaluating LLMs. </h1>
-				</div>
-				<div class="new_exp">
-					<a class="btn btn-dark" href={ templ.URL("/experiments") }>New experiment</a>
+		<body class={ styles.ColorMe("#27313E") }>
+			@layout.MainMenu()
+			<div class={ styles.MainTitle() }>
+				<p class={ styles.Text("Koulen", "128", "white") }>OSAIL;</p>
+				<p class={ styles.Text("Koulen", "32", "white") }>Local leaderboard for evaluating LLMs</p>
+				<div class={ styles.MainOptions() }>
+					<a class={ styles.Button("white", "black") } href={ templ.URL("/experiments") }>
+						Experiments
+					</a>
+					<a class={ styles.Button("white", "black") } href={ templ.URL("/experiments") }>
+						Publish
+					</a>
 				</div>
 			</div>
 		</body>
