@@ -28,7 +28,7 @@ templ RegisterModels(expId string) {
 }
 
 templ Models(expId string) {
-	<div class={ styles.CenteredContainer() } hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="load" hx-ext="json-enc">
+	<div class={ styles.CenteredContainer() } hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="load, changed from:#exp-status-hidden" hx-ext="json-enc">
 		<p class={ styles.Text("Koulen", "32", "white") }>Models</p>
 		<div class={ styles.FlexIt("row") } style="gap: 20px;">
 			<div class={ styles.FlexNoSpace("row", "50px") } id="model-container" style="gap: 20px; flex-wrap: wrap; align-items: center;"></div>

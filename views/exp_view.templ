@@ -9,13 +9,13 @@ import "github.com/softmaxer/localflow/views/styles"
 templ ExpProgress(status string) {
 	switch status {
 		case "idle":
-			<span class={ styles.Tag("grey", "white") }>{ status } </span>
+			<span class={ styles.Tag("grey", "white") } id="change-of-status">{ status } </span>
 		case "ongoing":
-			<span class={ styles.Tag("yellow", "black") }>{ status } </span>
+			<span class={ styles.Tag("yellow", "black") } id="change-of-status">{ status } </span>
 		case "finished":
-			<span class={ styles.Tag("green", "white") }>{ status } </span>
+			<span class={ styles.Tag("green", "white") } id="change-of-status">{ status } </span>
 		case "failed":
-			<span class={ styles.Tag("red", "white") }>{ status } </span>
+			<span class={ styles.Tag("red", "white") } id="change-of-status">{ status } </span>
 	}
 }
 
@@ -35,8 +35,10 @@ templ ShowExperiment(experiment data.Experiment) {
 		<body class={ styles.ColorMe("#27313E") }>
 			@layout.ExperimentsPageMenu()
 			<div class={ styles.CenteredContainer() }>
-				<div class={ styles.BasicFlex() } hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-trigger="load" hx-swap="beforeend">
+				<div id="exp-status-hidden" style="display:none;"></div>
+				<div class={ styles.BasicFlex() } hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-trigger="click from:#run-exp-button, changed from:#exp-status-hidden" hx-target="#change-of-status" hx-swap="outerHTML">
 					<p class={ styles.Text("Koulen", "42", "white") }>{ experiment.Name }</p>
+					<span class={ styles.Tag("grey", "white") } id="change-of-status">idle</span>
 				</div>
 				<p class={ styles.Text("Koulen", "30", "white") }>{ experiment.System } </p>
 				@Models(experiment.Id)
@@ -48,4 +50,8 @@ templ ShowExperiment(experiment data.Experiment) {
 
 templ run(expUrl string) {
 	<button class={ styles.SmallButton("white", "black") } type="button" id="run-exp-button" hx-post={ expUrl }>Run</button>
+}
+
+templ HiddenUpdate() {
+	<p>Done</p>
 }

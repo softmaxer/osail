@@ -11,6 +11,7 @@ import (
 	"github.com/softmaxer/localflow/data"
 	"github.com/softmaxer/localflow/pkg/board"
 	"github.com/softmaxer/localflow/pkg/llm"
+	"github.com/softmaxer/localflow/views"
 )
 
 func run(ctx *gin.Context, db *gorm.DB) {
@@ -65,8 +66,11 @@ func run(ctx *gin.Context, db *gorm.DB) {
 		}
 
 		player1.UpdateRating(player2, float64(judgement.Result[0]))
+		db.Model(&player1).Update("rating", player1.Rating)
 		player2.UpdateRating(player1, float64(judgement.Result[1]))
+		db.Model(&player2).Update("rating", player2.Rating)
 	}
 
 	db.Model(&experiment).Update("status", "finished")
+	render(ctx, 200, views.HiddenUpdate())
 }
