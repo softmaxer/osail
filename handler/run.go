@@ -14,6 +14,10 @@ import (
 	"github.com/softmaxer/localflow/views"
 )
 
+func updateStatus(ctx *gin.Context) {
+	render(ctx, 200, views.ExpProgress("ongoing"))
+}
+
 func run(ctx *gin.Context, db *gorm.DB) {
 	id := ctx.Param("id")
 	var experiment data.Experiment
@@ -66,9 +70,9 @@ func run(ctx *gin.Context, db *gorm.DB) {
 		}
 
 		player1.UpdateRating(player2, float64(judgement.Result[0]))
-		db.Model(&player1).Update("rating", player1.Rating)
+		// db.Model(&player1).Update("rating", player1.Rating)
 		player2.UpdateRating(player1, float64(judgement.Result[1]))
-		db.Model(&player2).Update("rating", player2.Rating)
+		// db.Model(&player2).Update("rating", player2.Rating)
 	}
 
 	db.Model(&experiment).Update("status", "finished")

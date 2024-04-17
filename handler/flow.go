@@ -45,6 +45,9 @@ func Router(dbPath string) *gin.Engine {
 	router.GET("/experiments/:id/open", func(ctx *gin.Context) {
 		open(ctx, db)
 	})
+	router.GET("/set/run", func(ctx *gin.Context) {
+		updateStatus(ctx)
+	})
 	router.POST("/experiments/:id/run", func(ctx *gin.Context) {
 		run(ctx, db)
 	})
