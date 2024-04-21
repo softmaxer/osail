@@ -8,14 +8,18 @@ import (
 	"math/rand"
 	"net/http"
 
+	"github.com/softmaxer/osail/data"
 	"github.com/softmaxer/osail/pkg/llm"
 )
 
 type Board struct {
-	Competitors []llm.Model
+	Competitors []data.Competitor
 }
 
-func (board *Board) GenerateCompetitors() (*llm.Model, *llm.Model) {
+func (board *Board) GenerateCompetitors() (*data.Competitor, *data.Competitor) {
+	if len(board.Competitors) == 2 {
+		return &board.Competitors[0], &board.Competitors[1]
+	}
 	player1 := rand.Intn(len(board.Competitors))
 	player2 := rand.Intn(len(board.Competitors))
 	for player2 == player1 {
