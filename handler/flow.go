@@ -6,8 +6,8 @@ import (
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 
-	"github.com/softmaxer/localflow/data"
-	"github.com/softmaxer/localflow/views"
+	"github.com/softmaxer/osail/data"
+	"github.com/softmaxer/osail/views"
 )
 
 func render(c *gin.Context, status int, template templ.Component) error {

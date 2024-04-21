@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/softmaxer/localflow/data"
-	"github.com/softmaxer/localflow/views"
+	"github.com/softmaxer/osail/data"
+	"github.com/softmaxer/osail/views"
 )
 
 func getExperimentById(c *gin.Context, db *gorm.DB) {

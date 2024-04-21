@@ -8,10 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/softmaxer/localflow/data"
-	"github.com/softmaxer/localflow/pkg/board"
-	"github.com/softmaxer/localflow/pkg/llm"
-	"github.com/softmaxer/localflow/views"
+	"github.com/softmaxer/osail/data"
+	"github.com/softmaxer/osail/pkg/board"
+	"github.com/softmaxer/osail/pkg/llm"
+	"github.com/softmaxer/osail/views"
 )
 
 func updateStatus(ctx *gin.Context) {

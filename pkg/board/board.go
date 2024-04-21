@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/softmaxer/localflow/pkg/llm"
+	"github.com/softmaxer/osail/pkg/llm"
 )
 
 type Board struct {

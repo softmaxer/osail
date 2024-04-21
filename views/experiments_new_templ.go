@@ -10,8 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/softmaxer/localflow/views/layout"
-import "github.com/softmaxer/localflow/views/styles"
+import "github.com/softmaxer/osail/views/layout"
+import "github.com/softmaxer/osail/views/styles"
 
 func tempForm() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {

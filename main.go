@@ -6,7 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/softmaxer/localflow/handler"
+	"github.com/softmaxer/osail/handler"
 )
 
 func main() {

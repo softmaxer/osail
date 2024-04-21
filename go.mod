@@ -1,4 +1,4 @@
-module github.com/softmaxer/localflow
+module github.com/softmaxer/osail
 
 go 1.22.1
 
