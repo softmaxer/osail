@@ -4,7 +4,7 @@ build:
 	@go build .
 
 run: build
-		@./localflow
+		@./osail
 	
 clean:
 	rm ./localflow
