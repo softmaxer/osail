@@ -37,22 +37,31 @@ templ ShowExperiment(experiment data.Experiment) {
 			<div class={ styles.CenteredContainer() }>
 				<div id="set-run" style="display:none" hx-get="/set/run" hx-target="#change-of-status" hx-trigger="click from:#run-exp-button" hx-swap="outerHTML"></div>
 				<div id="exp-status-hidden" style="display:none"></div>
-				<div class={ styles.BasicFlex() } hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-trigger="load, every:15m" hx-target="#change-of-status" hx-swap="outerHTML">
+				<div class={ styles.BasicFlex() } hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) } hx-trigger="load" hx-target="#change-of-status" hx-swap="outerHTML">
 					<p class={ styles.Text("Koulen", "42", "white") }>{ experiment.Name }</p>
 					<span class={ styles.Tag("grey", "white") } id="change-of-status">idle</span>
 				</div>
 				<p class={ styles.Text("Koulen", "30", "white") }>{ experiment.System } </p>
 				@Models(experiment.Id)
-				@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
+				<div class={ styles.CenteredContainer() }>
+					<div class={ styles.MainOptionsNoWidth() }>
+						@run(fmt.Sprintf("/experiments/%s/run", experiment.Id))
+						@refreshModels(experiment.Id)
+					</div>
+				</div>
 			</div>
 		</body>
 	</html>
 }
 
 templ run(expUrl string) {
-	<button class={ styles.SmallButton("white", "black") } type="button" id="run-exp-button" hx-post={ expUrl }>Run</button>
+	<button class={ styles.Button("white", "black") } type="button" id="run-exp-button" hx-post={ expUrl } hx-target="#exp-status-hidden">Run</button>
 }
 
-templ HiddenUpdate() {
-	<p>Done</p>
+templ refreshModels(expId string) {
+	<button type="button" class={ styles.Button("white", "black") } id="refresh-ratings" hx-get={ string(templ.URL(fmt.Sprintf("/experiments/%s/competitors/list", expId))) } hx-target="#model-container" hx-trigger="click" hx-target="#model-container">Refresh ratings</button>
+}
+
+templ HiddenUpdate(expId string) {
+	<div hx-post={ string(templ.URL(fmt.Sprintf("/experiments/%s/status", expId))) } hx-trigger="load" hx-target="#change-of-status" hx-swap="outerHTML">Done</div>
 }

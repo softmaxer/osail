@@ -73,6 +73,18 @@ func MainOptions() templ.CSSClass {
 	}
 }
 
+func MainOptionsNoWidth() templ.CSSClass {
+	var templ_7745c5c3_CSSBuilder strings.Builder
+	templ_7745c5c3_CSSBuilder.WriteString(`display:flex;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`justify-content:space-between;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`gap:200px;`)
+	templ_7745c5c3_CSSID := templ.CSSID(`MainOptionsNoWidth`, templ_7745c5c3_CSSBuilder.String())
+	return templ.ComponentCSSClass{
+		ID:    templ_7745c5c3_CSSID,
+		Class: templ.SafeCSS(`.` + templ_7745c5c3_CSSID + `{` + templ_7745c5c3_CSSBuilder.String() + `}`),
+	}
+}
+
 func ColorMe(color string) templ.CSSClass {
 	var templ_7745c5c3_CSSBuilder strings.Builder
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`background`, color)))

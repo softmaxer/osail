@@ -1,0 +1,16 @@
+package views
+
+templ ChangeStatus(expId string) {
+	<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('change-of-status').addEventListener('htmx:updateComplete', function(event) {
+        innerText = event.detail.target.innerHTML;
+        
+        if (innerText === 'finished') {
+            hx.get(event.detail.target.getAttribute('hx-get'));
+            htmx.ajax('GET',  { string(templ.URL(fmt.Sprintf("/experiments/%s/status", experiment.Id))) }, '#change-of-status', 'outerHTML')
+        }
+    });
+});
+  </script>
+}

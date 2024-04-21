@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-func ShowModalScript() templ.Component {
+func ChangeStatus(expId string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -23,7 +23,7 @@ func ShowModalScript() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script>\n    var modal = document.getElementById(\"id01\");\n    var btn = document.getElementById(\"modal-submit\");\n    var span = document.getElementsById(\"close-me\");\n\n    btn.onclick = function() {\n      modal.style.display = \"block\";\n    }\n\n    span.onclick = function() {\n      modal.style.display = \"none\";\n    }\n\n    window.onclick = function(event) {\n      if (event.target == modal) {\n        modal.style.display = \"none\";\n      }\n    }\n  </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<script>\n  document.addEventListener('DOMContentLoaded', function() {\n    document.getElementById('change-of-status').addEventListener('htmx:updateComplete', function(event) {\n        innerText = event.detail.target.innerHTML;\n        \n        if (innerText === 'finished') {\n            hx.get(event.detail.target.getAttribute('hx-get'));\n            htmx.ajax('GET',  { string(templ.URL(fmt.Sprintf(\"/experiments/%s/status\", experiment.Id))) }, '#change-of-status', 'outerHTML')\n        }\n    });\n});\n  </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
