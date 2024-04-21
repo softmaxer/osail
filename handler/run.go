@@ -70,9 +70,19 @@ func run(ctx *gin.Context, db *gorm.DB) {
 		}
 
 		player1.UpdateRating(player2, float64(judgement.Result[0]))
-		db.Where("name = ?", player1.Name).Update("rating", player1.Rating)
+		err = db.Model(&data.Competitor{}).
+			Where("name = ?", player1.Name).
+			Update("rating", player1.Rating).Error
+		if err != nil {
+			log.Printf("Error updating rating: %s\n", err.Error())
+		}
 		player2.UpdateRating(player1, float64(judgement.Result[1]))
-		db.Where("name = ?", player2.Name).Update("rating", player2.Rating)
+		err = db.Model(&data.Competitor{}).
+			Where("name = ?", player2.Name).
+			Update("rating", player2.Rating).Error
+		if err != nil {
+			log.Printf("Error updating rating: %s\n", err.Error())
+		}
 	}
 
 	db.Model(&experiment).Update("status", "finished")
