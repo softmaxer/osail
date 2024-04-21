@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  ollama-server-1:
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11434"
+    volumes:
+      - ~/ollama-server-1:/root/.ollama 
+        #deploy:
+        #  resources:
+        #    reservations:
+        #      devices:
+        #        - driver: nvidia
+        #          count: "all"
+        #          capabilities: [gpu]
+
+  ollama-server-2:
+    image: ollama/ollama:latest
+    ports:
+      - "11436:11434"
+    volumes:
+      - ~/ollama-server-2:/root/.ollama
+
+
+  ollama-server-3:
+    image: ollama/ollama:latest
+    ports:
+      - "11437:11434"
+    volumes:
+      - ~/ollama-server-3:/root/.ollama 
