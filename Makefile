@@ -7,6 +7,6 @@ run: build
 		@./osail
 	
 clean:
-	rm ./localflow
+	rm ./osail
 	rm test.db
 	touch test.db
