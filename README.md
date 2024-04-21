@@ -36,6 +36,7 @@ make
 
 ### Starting an experiment
 - Before starting an experiment, make sure to have [Ollama](https://www.ollama.com) installed on your PC as the judge model runs natively on your machine.
+- The experiments and the ratings of the models are stored in an `SQLite` databse. So go ahead and create a new `my_database.db` file and include it in your `.env` file at the root. (Or use an existing file from anywhere in your system).
 - System prompt defines the general behaviour of the LLM i.e., if it should respond in a certain format or with a certain tone, etc.
 - The `PROMPT` file should be a `.txt` file that can contain multiple prompts separated by `----` (four dashes). **NOTE**: The field `system prompt` can be used a prompt template, and the `prompts` can be the actual text, as they will be concatenated for the inference.
 - Choose a judge model that either exists on your PC locally, or one of the models available from [Ollama](https://www.ollama.com)
