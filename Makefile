@@ -1,12 +1,18 @@
+BINARY=osail
+
 build:
 	@templ fmt .
 	@templ generate
-	@go build .
+	@GOARCH=amd64 GOOS=darwin go build -o ./target/${BINARY}-darwin-amd64 .
+	@GOARCH=arm64 GOOS=darwin go build -o ./target/${BINARY}-darwin-arm64 .
+	@GOARCH=amd64 GOOS=linux go build -o ./target/${BINARY}-linux-amd64 .
+	@GOARCH=amd64 GOOS=windows go build -o ./target/${BINARY}-windows-amd64 .
 
 run: build
-		@./osail
-	
+		@./target/${BINARY}-darwin-arm64
+
 clean:
-	rm ./osail
-	rm test.db
-	touch test.db
+	rm -r ./views/*.go
+	rm -r ./views/layout/*.go
+	rm -r ./views/styles/*.go
+	rm -r ./target/*
