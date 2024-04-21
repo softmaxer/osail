@@ -28,24 +28,9 @@ func run(ctx *gin.Context, db *gorm.DB) {
 
 	db.Model(&experiment).Update("status", "ongoing")
 	var competitors []data.Competitor
-	db.Where("experiment_id = ?", id).Find(&competitors)
+	db.Model(&data.Competitor{}).Where("experiment_id = ?", id).Find(&competitors)
 
-	startPort := 11435
-	var models []llm.Model
-	for _, competitor := range competitors {
-		model := llm.Model{
-			Name:   competitor.Name,
-			Host:   competitor.Host,
-			Port:   startPort,
-			Stream: false,
-			Rating: 1500,
-		}
-
-		models = append(models, model)
-		startPort++
-	}
-
-	board := board.Board{Competitors: models}
+	board := board.Board{Competitors: competitors}
 	judge := &llm.Judge{
 		Name:   experiment.Judge,
 		Host:   "http://localhost",
@@ -70,11 +55,11 @@ func run(ctx *gin.Context, db *gorm.DB) {
 		}
 
 		player1.UpdateRating(player2, float64(judgement.Result[0]))
-		db.Where("name = ?", player1.Name).Update("rating", player1.Rating)
+		db.Model(player1).Where("name = ?", player1.Name).Update("rating", player1.Rating)
 		player2.UpdateRating(player1, float64(judgement.Result[1]))
-		db.Where("name = ?", player2.Name).Update("rating", player2.Rating)
+		db.Model(player2).Where("name = ?", player2.Name).Update("rating", player2.Rating)
 	}
 
 	db.Model(&experiment).Update("status", "finished")
-	render(ctx, 200, views.HiddenUpdate())
+	render(ctx, 200, views.HiddenUpdate(id))
 }

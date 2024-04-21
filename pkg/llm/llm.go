@@ -3,6 +3,7 @@ package llm
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -82,6 +83,9 @@ func (model *Model) GetCompletion(prompt string) ollama.GenerateResponse {
 }
 
 func ParseJSON(response ollama.GenerateResponse, obj any) error {
+	if response.Response == "" {
+		return errors.New("Empty response")
+	}
 	start := strings.Index(response.Response, "{")
 	end := strings.LastIndex(response.Response, "}") + 1
 	jsonPart := response.Response[start:end]

@@ -3,3 +3,6 @@ test.db
 .env
 .DS_Store
 osail
+views/*.go
+views/layout/*.go
+views/styles/*.go
