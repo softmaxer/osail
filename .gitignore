@@ -6,3 +6,4 @@ osail
 views/*.go
 views/layout/*.go
 views/styles/*.go
+target/*
