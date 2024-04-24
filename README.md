@@ -4,11 +4,17 @@
 <h1 align="center">A local leaderboard for evaluating your LLMs</h1>
 
 <p align="center">
- <img src="https://github.com/softmaxer/osail/blob/main/assets/demo/video_demo_gif.gif">
-<img src="https://img.shields.io/badge/web_framework-htmx_templ-red?style=for-the-badge">
+ <img src="https://img.shields.io/badge/web_framework-htmx_templ-red?style=for-the-badge">
 <img src="https://img.shields.io/badge/Backend-Go-blue?style=for-the-badge">
 <img src="https://img.shields.io/badge/Inference_engine-Ollama-yellow?style=for-the-badge&logo=ollama">
 </p>
+
+
+
+<p align="center">
+ <img src="https://github.com/softmaxer/osail/blob/main/assets/demo/video_demo_gif.gif">
+</p>
+
 
 ## Overview
 OSAIL (OpenSource AI Leaderboard) is a service that allows you to evaluate LLMs by computing an [Elo](https://en.wikipedia.org/wiki/Elo_rating_system) rating for a set of given models. Osail uses a Judge LLM (which can be configured) to evaluate the candidate responses.
