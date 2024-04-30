@@ -51,7 +51,7 @@ make
   **NOTE**: Since OSAIL uses Ollama as the main inference engine, any of the model tags present on their website should work out of the box! (given you have enough resources on your machine).
 
 ### Registering a Model
-- Refer to the example `docker-compose.yml` file to see how to start up multiple ollama instances as docker images.
+- Refer to the example `multi-ollama.yml` file to see how to start up multiple ollama instances as docker images.
 - Configure which port they should be running on, as per your will.
 - Once you have filled out all the models that need to be running for the experiment, press run, and wait for it to finish.
   **NOTE**: This may take a very long time, depending on the resources available on your Machine. Ideally this should be run with a GPU
